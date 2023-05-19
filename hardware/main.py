@@ -17,7 +17,7 @@ def givePoint(target):
 max_so_far = 0
 while True:
     # hardcoded wall
-    if apds.proximity > 5:
+    if apds.proximity > 4:
         max_so_far = apds.proximity
         givePoint(0)
 
