@@ -1,20 +1,12 @@
 import time
-import RPi.GPIO as GPIO
+import board
+from adafruit_apds9960.apds9960 import APDS9960
 import requests
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
+i2c = board.I2C()
+apds = APDS9960(i2c)
 
-# TODO(haydendaly): configure pins per board
-LIGHT_SENSOR_PIN_0 = 4
-LIGHT_SENSOR_PIN_1 = 17
-
-GPIO.setup(LIGHT_SENSOR_PIN_0, GPIO.IN)
-GPIO.setup(LIGHT_SENSOR_PIN_1, GPIO.IN)
-
-DETECTION_INTERVAL = 0.01
-ball_count_0 = 0
-ball_count_1 = 0
+apds.enable_proximity = True
 
 def givePoint(target):
     url = 'https://hw3-bice.vercel.app/api/points/4242/0'
@@ -33,17 +25,14 @@ def givePoint(target):
     else:
         print(f"Error sending POST request: {response.status_code}")
 
-def detect_ball():
-    if not GPIO.input(LIGHT_SENSOR_PIN_0):
+
+max_so_far = 0
+while True:
+    if apds.proximity > max_so_far:
+        max_so_far = apds.proximity
+        print(apds.proximity)
         givePoint(0)
-    if not GPIO.input(LIGHT_SENSOR_PIN_1):
-        givePoint(1)
+        max_so_far = 0
 
-try:
-    while True:
-        detect_ball()
-        time.sleep(DETECTION_INTERVAL)
+    time.sleep(0.005)
 
-except KeyboardInterrupt:
-    print("\nExiting...")
-    GPIO.cleanup()
