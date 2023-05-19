@@ -17,7 +17,7 @@ ball_count_0 = 0
 ball_count_1 = 0
 
 def givePoint(target):
-    url = 'http://localhost:8000/give_point'
+    url = 'https://hw3-bice.vercel.app/api/points/4242/0'
     data = {'target': target}
     response = requests.post(url, json=data)
 
