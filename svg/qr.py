@@ -2,7 +2,7 @@ import qrcode
 from qrcode.image.svg import SvgImage
 from lxml import etree
 
-url = 'https://www.example.com'
+url = 'https://hw3-bice.vercel.app/'
 
 if __name__ == '__main__':
     qr = qrcode.QRCode(
